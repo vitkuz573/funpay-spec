@@ -1,0 +1,256 @@
+version: "1.0"
+base_url: "https://funpay.com"
+
+types:
+  OfferId:
+    rust: "u64"
+    typescript: "number"
+    python: "int"
+    go: "uint64"
+    java: "long"
+  UserId:
+    rust: "u64"
+    typescript: "number"
+    python: "int"
+    go: "uint64"
+    java: "long"
+  Price:
+    rust: "f64"
+    typescript: "number"
+    python: "float"
+    go: "float64"
+    java: "double"
+  Currency:
+    rust: "String"
+    typescript: "string"
+    python: "str"
+    go: "string"
+    java: "String"
+  Url:
+    rust: "String"
+    typescript: "string"
+    python: "str"
+    go: "string"
+    java: "String"
+  HtmlContent:
+    rust: "String"
+    typescript: "string"
+    python: "str"
+    go: "string"
+    java: "String"
+  Timestamp:
+    rust: "chrono::DateTime<chrono::Utc>"
+    typescript: "string"
+    python: "datetime"
+    go: "time.Time"
+    java: "Instant"
+
+enums:
+  LotSaleType:
+    values:
+      single: "single"
+      bulk: "bulk"
+  OfferOrderType:
+    values:
+      auto: "auto"
+      manual: "manual"
+  ServerTagType:
+    values:
+      server: "server"
+      platform: "platform"
+
+entities:
+  Game:
+    fields:
+      id:
+        type: "String"
+        selector: "a.game-title"
+        attribute: "data-game-id"
+      title:
+        type: "String"
+        selector: "a.game-title"
+      icon_url:
+        type: "Url"
+        selector: "img.game-icon"
+        attribute: "src"
+      url:
+        type: "Url"
+        selector: "a.game-title"
+        attribute: "href"
+      categories:
+        type: "Vec<Category>"
+        selector: ".game-categories"
+
+  Category:
+    fields:
+      id:
+        type: "String"
+        selector: ".category-item"
+        attribute: "data-category-id"
+      title:
+        type: "String"
+        selector: ".category-item .cat-title"
+      url:
+        type: "Url"
+        selector: ".category-item a"
+        attribute: "href"
+      game_id:
+        type: "String"
+        nullable: true
+
+  Offer:
+    fields:
+      id:
+        type: "OfferId"
+        selector: ".tc-item"
+        attribute: "data-order"
+      seller_id:
+        type: "UserId"
+        selector: ".tc-item"
+        attribute: "data-user-id"
+      server:
+        type: "Option<String>"
+        selector: ".tc-server"
+      price:
+        type: "Price"
+        selector: ".tc-price"
+        transform: "parse_price"
+      currency:
+        type: "Currency"
+        selector: ".tc-price .currency"
+      description:
+        type: "Option<String>"
+        selector: ".tc-desc-text"
+      sale_type:
+        type: "LotSaleType"
+        selector: ".tc-item"
+        attribute: "data-mark"
+      item_count:
+        type: "Option<u32>"
+        selector: ".tc-item"
+        attribute: "data lot-size"
+        nullable: true
+
+  OfferLot:
+    fields:
+      offer_id:
+        type: "OfferId"
+        selector: ".tc-item"
+        attribute: "data-order"
+      server:
+        type: "Option<String>"
+        selector: ".tc-server"
+      price:
+        type: "Price"
+        selector: ".tc-price"
+        transform: "parse_price"
+      description:
+        type: "Option<String>"
+        selector: ".tc-desc-text"
+
+  User:
+    fields:
+      id:
+        type: "UserId"
+        selector: ".profile-user-id"
+        attribute: "data-user-id"
+      username:
+        type: "String"
+        selector: ".profile-title"
+      avatar_url:
+        type: "Url"
+        selector: ".profile-avatar img"
+        attribute: "src"
+      status:
+        type: "Option<String>"
+        selector: ".user-status"
+      registration_date:
+        type: "Option<Timestamp>"
+        selector: ".profile-regdate"
+        transform: "parse_date"
+
+  LotItem:
+    fields:
+      id:
+        type: "String"
+        selector: ".tc-item"
+        attribute: "data-item-id"
+      name:
+        type: "String"
+        selector: ".tc-item-text"
+      image_url:
+        type: "Option<Url>"
+        selector: ".tc-item img"
+        attribute: "src"
+
+pages:
+  game_list:
+    url: "/lots/"
+    list_selector: ".game-list .game-title"
+    entity: "Game"
+    description: "Main games catalog page"
+
+  category_offers:
+    url_pattern: "/lots/{game_id}/{category_id}/"
+    list_selector: ".tc-item"
+    entity: "Offer"
+    description: "Offers in a specific game category"
+
+  user_profile:
+    url_pattern: "/users/{user_id}/"
+    entity: "User"
+    description: "User profile page"
+
+  user_offers:
+    url_pattern: "/users/{user_id}/lots/"
+    list_selector: ".tc-item"
+    entity: "OfferLot"
+    description: "User's active offers"
+
+drift_detection:
+  enabled: true
+  interval: "24h"
+  critical_selectors:
+    - selector: ".tc-item"
+      context: "offer_list"
+      description: "Offer cards on category page"
+    - selector: ".tc-price"
+      context: "offer_price"
+      description: "Price element in offer cards"
+    - selector: ".tc-server"
+      context: "offer_server"
+      description: "Server name in offer cards"
+    - selector: ".tc-desc-text"
+      context: "offer_description"
+      description: "Description text in offer cards"
+    - selector: ".profile-title"
+      context: "user_profile"
+      description: "Username on profile page"
+    - selector: ".game-title"
+      context: "game_list"
+      description: "Game titles in catalog"
+    - selector: ".category-item"
+      context: "category_list"
+      description: "Category items in game page"
+    - selector: ".tc-item"
+      context: "user_lots"
+      description: "User's lot items"
+  test_urls:
+    - url: "/lots/"
+      description: "Main lots page"
+    - url: "/users/1/"
+      description: "Test user profile"
+
+auth:
+  type: "cookie"
+  cookie_name: "golden_key"
+  required_for:
+    - "send_message"
+    - "create_offer"
+    - "edit_offer"
+    - "delete_offer"
+    - "get_balance"
+
+rate_limits:
+  requests_per_second: 2.0
+  max_retries: 3
