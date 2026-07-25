@@ -58,6 +58,17 @@ enums:
     values:
       server: "server"
       platform: "platform"
+  OrderStatus:
+    values:
+      pending: "pending"
+      active: "active"
+      completed: "completed"
+      cancelled: "cancelled"
+      disputed: "disputed"
+  OnlineStatus:
+    values:
+      online: "online"
+      offline: "offline"
 
 entities:
   Game:
@@ -183,6 +194,161 @@ entities:
         selector: ".tc-item img"
         attribute: "src"
 
+  Seller:
+    fields:
+      user_id:
+        type: "UserId"
+        selector: ".seller-info"
+        attribute: "data-user-id"
+      name:
+        type: "String"
+        selector: ".seller-info .seller-name"
+      rating:
+        type: "f64"
+        selector: ".seller-rating"
+      reviews:
+        type: "u32"
+        selector: ".seller-reviews"
+      avatar_url:
+        type: "Url"
+        selector: ".seller-avatar img"
+        attribute: "src"
+      online:
+        type: "OnlineStatus"
+        selector: ".seller-online"
+
+  Lot:
+    fields:
+      id:
+        type: "String"
+        selector: ".tc-item"
+        attribute: "data-lot-id"
+      game:
+        type: "Option<String>"
+        selector: ".tc-game"
+      server:
+        type: "Option<String>"
+        selector: ".tc-server"
+      seller:
+        type: "Seller"
+        selector: ".tc-seller"
+      price:
+        type: "Price"
+        selector: ".tc-price"
+        transform: "parse_price"
+      currency:
+        type: "Currency"
+        selector: ".tc-price .currency"
+      description:
+        type: "Option<String>"
+        selector: ".tc-desc-text"
+
+  Order:
+    fields:
+      order_id:
+        type: "String"
+        selector: ".order-item"
+        attribute: "data-order-id"
+      game:
+        type: "Option<String>"
+        selector: ".order-game"
+      status:
+        type: "OrderStatus"
+        selector: ".order-status"
+      price:
+        type: "Price"
+        selector: ".order-price"
+        transform: "parse_price"
+      currency:
+        type: "Currency"
+        selector: ".order-price .currency"
+      date:
+        type: "Option<Timestamp>"
+        selector: ".order-date"
+        transform: "parse_date"
+      seller:
+        type: "Seller"
+        selector: ".order-seller"
+      buyer:
+        type: "Seller"
+        selector: ".order-buyer"
+
+  Chat:
+    fields:
+      chat_id:
+        type: "String"
+        selector: ".chat-item"
+        attribute: "data-chat-id"
+      user:
+        type: "Seller"
+        selector: ".chat-item"
+      last_message:
+        type: "Option<String>"
+        selector: ".chat-last-message"
+      unread_count:
+        type: "u32"
+        selector: ".chat-unread"
+
+  ChatMessage:
+    fields:
+      message_id:
+        type: "String"
+        selector: ".msg"
+        attribute: "data-msg-id"
+      sender:
+        type: "UserId"
+        selector: ".msg"
+        attribute: "data-sender-id"
+      text:
+        type: "String"
+        selector: ".msg-text"
+      date:
+        type: "Option<Timestamp>"
+        selector: ".msg-date"
+        transform: "parse_date"
+      is_self:
+        type: "bool"
+        selector: ".msg"
+        attribute: "data-self"
+
+  Review:
+    fields:
+      review_id:
+        type: "String"
+        selector: ".review-item"
+        attribute: "data-review-id"
+      author:
+        type: "Seller"
+        selector: ".review-author"
+      text:
+        type: "Option<String>"
+        selector: ".review-text"
+      date:
+        type: "Option<Timestamp>"
+        selector: ".review-date"
+        transform: "parse_date"
+      rating:
+        type: "f64"
+        selector: ".review-rating"
+      order_link:
+        type: "Option<String>"
+        selector: ".review-order-link"
+        attribute: "href"
+
+  GameCategory:
+    fields:
+      id:
+        type: "String"
+        selector: ".category-item"
+        attribute: "data-category-id"
+      name:
+        type: "String"
+        selector: ".category-item .cat-title"
+      url:
+        type: "Url"
+        selector: ".category-item a"
+        attribute: "href"
+
 pages:
   game_list:
     url: "/lots/"
@@ -206,6 +372,29 @@ pages:
     list_selector: ".tc-item"
     entity: "OfferLot"
     description: "User's active offers"
+
+  seller_profile:
+    url_pattern: "/users/{seller_id}/"
+    entity: "Seller"
+    description: "Seller profile page"
+
+  orders:
+    url: "/orders/"
+    list_selector: ".order-item"
+    entity: "Order"
+    description: "User's orders page"
+
+  chats:
+    url: "/chats/"
+    list_selector: ".chat-item"
+    entity: "Chat"
+    description: "User's chat list"
+
+  chat_messages:
+    url_pattern: "/chats/{chat_id}/"
+    list_selector: ".msg"
+    entity: "ChatMessage"
+    description: "Messages in a chat conversation"
 
 drift_detection:
   enabled: true
