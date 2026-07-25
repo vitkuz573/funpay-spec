@@ -329,12 +329,10 @@ entities:
     fields:
       id:
         type: "OfferId"
-        selector: ".tc-item"
         attribute: "data-order"
         description: "Unique offer identifier"
       seller_id:
         type: "UserId"
-        selector: ".tc-item"
         attribute: "data-user-id"
         description: "Seller's user ID"
       server:
@@ -356,12 +354,10 @@ entities:
         description: "Seller's description"
       sale_type:
         type: "LotSaleType"
-        selector: ".tc-item"
         attribute: "data-mark"
         description: "Single or bulk sale"
       item_count:
         type: "Option<u32>"
-        selector: ".tc-item"
         attribute: "data-lot-size"
         nullable: true
         description: "Number of items in lot"
@@ -376,7 +372,6 @@ entities:
     fields:
       offer_id:
         type: "OfferId"
-        selector: ".tc-item"
         attribute: "data-order"
         description: "Parent offer ID"
       server:
@@ -430,7 +425,6 @@ entities:
     fields:
       id:
         type: "LotId"
-        selector: ".tc-item"
         attribute: "data-item-id"
         description: "Lot item identifier"
       name:
@@ -482,7 +476,6 @@ entities:
     fields:
       id:
         type: "LotId"
-        selector: ".tc-item"
         attribute: "data-lot-id"
         description: "Unique lot identifier"
       game:
