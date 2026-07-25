@@ -10,4 +10,12 @@ pub enum SpecError {
     Http(#[from] reqwest::Error),
     #[error("drift detected: {0}")]
     Drift(String),
+    #[error("invalid selector: {0}")]
+    InvalidSelector(String),
+    #[error("entity not found: {0}")]
+    EntityNotFound(String),
+    #[error("field not found in entity {entity}: {field}")]
+    FieldNotFound { entity: String, field: String },
+    #[error("transform not found: {0}")]
+    TransformNotFound(String),
 }
