@@ -2,7 +2,7 @@
 name = "funpay-spec"
 version = "0.1.0"
 edition = "2021"
-description = "Language-agnostic specification and drift detection for FunPay.com"
+description = "Webspec specification for FunPay.com"
 license = "MIT"
 repository = "https://github.com/vitkuz573/funpay-spec"
 authors = ["Vitaly Kuzyaev <vitkuz573@gmail.com>"]

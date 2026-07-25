@@ -1,61 +1,38 @@
 # funpay-spec
 
-Language-agnostic specification and drift detection for [FunPay.com](https://funpay.com).
+Webspec specification for [FunPay.com](https://funpay.com) — a Russian marketplace for game items and services.
 
-## What is this?
+This is an **instance** of the [webspec protocol](https://github.com/vitkuz573/webspec-proto), describing how to scrape and interact with FunPay.
 
-`funpay-spec` defines a machine-readable YAML specification of FunPay.com's HTML structure, enabling:
+## What is webspec?
 
-- **SDK generation** in any language (Rust, TypeScript, Python, Go, Java)
-- **Drift detection** when FunPay changes their HTML
-- **Type-safe mapping** of FunPay concepts to native types
+webspec is a universal protocol for describing web scraping operations. See [webspec-proto](https://github.com/vitkuz573/webspec-proto) for the full specification.
 
-## The Spec
+## Generate SDK
 
-The specification lives in `spec/funpay.yaml` and defines:
+```bash
+# Using webspec
+cargo run --manifest-path ../webspec/Cargo.toml -- generate \
+    --spec spec/funpay.yaml \
+    --target rust \
+    --output ../funpay-rs/
 
-- **Types**: Mapping of abstract types (OfferId, Price, etc.) to language-specific types
-- **Entities**: Game, Category, Offer, User — with CSS selectors and transforms
-- **Pages**: URL patterns and entity associations
-- **Drift Detection**: Critical selectors and test URLs for monitoring
-- **Auth**: Cookie-based authentication requirements
-- **Rate Limits**: Request throttling configuration
-
-## Usage
-
-### Load the spec
-
-```rust
-use funpay_spec::FunPaySpec;
-
-// From file
-let spec = FunPaySpec::load("spec/funpay.yaml")?;
-
-// From string
-let spec = FunPaySpec::from_str(yaml_content)?;
+# Or using funpay-rs build script
+cd ../funpay-rs && bash build.sh
 ```
 
-### Run drift detection
+## Validate
 
-```rust
-use funpay_spec::{FunPaySpec, check_drift};
-
-let spec = FunPaySpec::load("spec/funpay.yaml")?;
-let report = check_drift(&spec, "https://funpay.com").await?;
-
-if report.is_healthy() {
-    println!("No drift detected");
-} else {
-    println!("Drift detected! {}", report.summary());
-    for warning in &report.warnings {
-        eprintln!("  - {}", warning);
-    }
-}
+```bash
+cargo run --manifest-path ../webspec/Cargo.toml -- validate \
+    --spec spec/funpay.yaml
 ```
 
-## Consumers
+## What's Included
 
-- [funpay-rs](https://github.com/vitkuz573/funpay-rs) — Rust SDK (first consumer)
+- `spec/funpay.yaml` — The webspec spec (entities, pages, types, drift detection)
+- Drift detection for monitoring FunPay HTML changes
+- Type mappings for Rust, TypeScript, Python, Go, Java
 
 ## License
 

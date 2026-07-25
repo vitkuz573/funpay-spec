@@ -1,4 +1,6 @@
 version: "1.0"
+name: "FunPay"
+protocol: "webspec"
 base_url: "https://funpay.com"
 
 types:
@@ -8,18 +10,35 @@ types:
     python: "int"
     go: "uint64"
     java: "long"
+    newtype: true
   UserId:
     rust: "u64"
     typescript: "number"
     python: "int"
     go: "uint64"
     java: "long"
+    newtype: true
+  LotId:
+    rust: "u64"
+    typescript: "number"
+    python: "int"
+    go: "uint64"
+    java: "long"
+    newtype: true
+  GameId:
+    rust: "u64"
+    typescript: "number"
+    python: "int"
+    go: "uint64"
+    java: "long"
+    newtype: true
   Price:
     rust: "f64"
     typescript: "number"
     python: "float"
     go: "float64"
     java: "double"
+    newtype: true
   Currency:
     rust: "String"
     typescript: "string"
@@ -39,11 +58,11 @@ types:
     go: "string"
     java: "String"
   Timestamp:
-    rust: "chrono::DateTime<chrono::Utc>"
+    rust: "String"
     typescript: "string"
-    python: "datetime"
-    go: "time.Time"
-    java: "Instant"
+    python: "str"
+    go: "string"
+    java: "String"
 
 enums:
   LotSaleType:
