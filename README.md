@@ -9,7 +9,7 @@ This is an **instance** of the [webspec protocol](https://github.com/vitkuz573/w
 ```
 funpay-spec/
 ├── spec/
-│   └── funpay.webspec.yaml    # The webspec spec
+│   └── funpay.webspec    # The webspec spec
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
@@ -19,7 +19,7 @@ This repository contains **only the YAML specification** — no Rust code, no ge
 
 ## Spec Coverage
 
-The `spec/funpay.webspec.yaml` defines:
+The `spec/funpay.webspec` defines:
 
 | Section | Count |
 |---------|-------|
@@ -59,19 +59,19 @@ Use [webspec](https://github.com/vitkuz573/webspec) to generate SDKs from this s
 ```bash
 # Generate Rust SDK for funpay-rs
 webspec generate \
-    --spec spec/funpay.webspec.yaml \
+    --spec spec/funpay.webspec \
     --target rust \
     --output ../funpay-rs/
 
 # Generate TypeScript SDK
 webspec generate \
-    --spec spec/funpay.webspec.yaml \
+    --spec spec/funpay.webspec \
     --target typescript \
     --output ./ts-sdk/
 
 # Generate Python SDK
 webspec generate \
-    --spec spec/funpay.webspec.yaml \
+    --spec spec/funpay.webspec \
     --target python \
     --output ./py-sdk/
 ```
@@ -85,7 +85,7 @@ cd ../funpay-rs && bash build.sh
 ## Validate
 
 ```bash
-webspec validate --spec spec/funpay.webspec.yaml
+webspec validate --spec spec/funpay.webspec
 ```
 
 ## How This Is Used
