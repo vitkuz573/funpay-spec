@@ -9,7 +9,8 @@ This is an **instance** of the [webspec protocol](https://github.com/vitkuz573/w
 ```
 funpay-spec/
 ├── spec/
-│   └── funpay.yaml    # The webspec spec
+│   ├── funpay.webspec.yaml    # The webspec spec (LSP-activated extension)
+│   └── funpay.yaml            # Symlink for backwards compatibility
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
